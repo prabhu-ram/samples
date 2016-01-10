@@ -14,6 +14,9 @@ Installations:
 
 	+ Here is an article on how you can interact with a git repository and contribute.  http://www.pontikis.net/blog/how-to-collaborate-on-github-open-source-projects
 
+	+ I am using Windows style crlf when adding files to git.  To do so in Windows do the following:
+		git config --global core.autocrlf false	
+
 4. Download node.js binary. Accept the defaults and make sure node and npm are in your PATH.  https://nodejs.org/en/download/
 
 5. Install gulp globally.  From anywhere in your machine type the following:
@@ -34,6 +37,5 @@ Installations:
 		This will start all the downloads for the endtoend prototype.  The --save at the end is important as it will install the files locally in the prototype.  This will make installation/deployments easier later.
 
 	+ bower install --save
-
 
 That should do it for the installs.
