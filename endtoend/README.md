@@ -52,18 +52,14 @@ Running endtoend:
 
 Assuming you are doing this on windows and you want to see debug statements:
 
-From the main folder:
+Open a command window.  From the main folder, type in:
 
 <h5>set DEBUG=endtoend* & npm start</h5>
 
-If you don't want to see debug statement
+If you don't want to see debug statement type in:
 
 <h5>npm start</h5>
 
-
 After this you can go to http://localhost:3000/ on your browser and interact with the app.
-
-
-
 
 
