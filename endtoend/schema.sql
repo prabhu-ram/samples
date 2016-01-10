@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS `productmanagement` ;
+
 USE `productmanagement` ;
 
 DROP TABLE IF EXISTS `productmanagement`.`product` ;
