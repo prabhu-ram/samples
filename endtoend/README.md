@@ -46,3 +46,24 @@ Configurations:
 		});
 
 That should be it for configurations.
+
+Running endtoend:
+---------------
+
+Assuming you are doing this on windowsand you want to see debug statements:
+
+From the main folder:
+
+<h5>set DEBUG=endtoend* & npm start</h5>
+
+If you don't want to see debug statement
+
+<h5>npm start</h5>
+
+
+After this you can go to http://localhost:3000/ on your browser and interact with the app.
+
+
+
+
+
