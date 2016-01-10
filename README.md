@@ -15,12 +15,14 @@ Installations:
 	+ Here is an article on how you can interact with a git repository and contribute.  http://www.pontikis.net/blog/how-to-collaborate-on-github-open-source-projects
 
 	+ I am using Windows style crlf when adding files to git.  To do so in Windows do the following:
-		git config --global core.autocrlf false	
+
+		- git config --global core.autocrlf false	
 
 4. Download node.js binary. Accept the defaults and make sure node and npm are in your PATH.  https://nodejs.org/en/download/
 
 5. Install gulp globally.  From anywhere in your machine type the following:
-        npm install gulp -g 
+
+		- npm install gulp -g 
 
 6. Now you should be able to install the node packages.  To do so:
 
