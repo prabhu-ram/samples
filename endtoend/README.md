@@ -54,7 +54,7 @@ Assuming you are doing this on windows and you want to see debug statements:
 
 Open a command window.  From the main folder, type in:
 
-<h5>set DEBUG=endtoend* & npm start</h5>
+<h5>set DEBUG=endtoend:* & npm start</h5>
 
 If you don't want to see debug statement type in:
 
