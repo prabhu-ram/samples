@@ -36,7 +36,7 @@ Installations:
 
 	+ npm install --save
 
-		This will start all the downloads for the endtoend prototype.  The --save at the end is important as it will install the files locally in the prototype.  This will make installation/deployments easier later.
+		This will start all the downloads for the endtoend prototype.  The --save at the end is important as it will install the files locally in the prototype.  This will make installation/deployments easier later. This install will download tons of stuff - be patient as there is a lot of bloat in the code.
 
 	+ bower install --save
 
