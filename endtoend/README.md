@@ -50,7 +50,7 @@ That should be it for configurations.
 Running endtoend:
 ---------------
 
-Assuming you are doing this on windowsand you want to see debug statements:
+Assuming you are doing this on windows and you want to see debug statements:
 
 From the main folder:
 
