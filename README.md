@@ -41,3 +41,8 @@ Installations:
 	+ bower install --save
 
 That should do it for the installs.
+
+
+Configurations:
+--------------
+I will put a README file under the first level directories (eg. endtoend) with configuration instructions.
