@@ -24,7 +24,7 @@
 <h2>ng-minlength + ng-maxlength</h2>
 <p>
     The <code>ng-minlength</code> and <code>ng-maxlength</code> form validation directives can be used
-    to validate the length of data entered in a form field. Here is an example:
+    to validate the length of data entered in a form field. Here is an example where the input shoukd be between 5 and 12 chars:
 </p>
 <div ng-controller="MyController" >
     <form>
@@ -43,7 +43,7 @@
 </p>
 
 <input type="text" id="name" ng-model="myForm.name2" ng-pattern="/^\d+$/"> Try a number <br/>
-
+<p></p>
     <div>
         {{myForm.name2}}
     </div>
@@ -68,6 +68,7 @@
 
 <p>
 <div ng-controller="ExampleController">
+   <p>First button will increment the counter, the second one won't</p>
   <input type="checkbox" ng-model="confirmed" ng-change="change()" id="ng-change-example1" />
   <input type="checkbox" ng-model="confirmed" id="ng-change-example2" />
   <label for="ng-change-example2">Confirmed</label><br />
@@ -221,7 +222,7 @@ Foo</h3>
   var app = angular.module("myapp", []);
   app.controller("MyController", function($scope) {
                 $scope.myForm = {};
-                $scope.myForm.name = "type above";
+                $scope.myForm.name = "type above and see below";
 
                 $scope.myForm.name2 = "123";
             } );
@@ -229,7 +230,7 @@ Foo</h3>
    app.controller('ExampleController', ['$scope', function($scope) {
       $scope.counter = 0;
       $scope.confirmed = false;
-      $scope.change = function() {
+      $scope.change = function() { // here is the function that is executed
         $scope.counter++;
       };
     }]);
