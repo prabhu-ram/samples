@@ -1,9 +1,9 @@
 var mysqlConnectionString = {
 	connection : {
 		dev: {
-			host: '192.168.1.5',
-			user: 'prabhu',
-			password: 'prabhu',
+			host: 'localhost',
+			user: 'root',
+			password: 'Abc123!@#',
 			database: 'productmanagement'
 		},
 

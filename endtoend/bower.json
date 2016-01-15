@@ -3,18 +3,20 @@
   "description": "",
   "main": "",
   "license": "MIT",
+  "homepage": "https://github.com/prabhu-ram/samples",
   "moduleType": [
     "node"
   ],
-  "homepage": "",
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
+    "public/vendor",
     "test",
     "tests"
   ],
   "dependencies": {
-    "angular": "angularjs#~1.4.8"
+    "angular": "~1.4.8"
   }
 }
