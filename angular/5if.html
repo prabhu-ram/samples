@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+	<h3>ng-if</h3>
+    <div ng-if="myData.showIt">
+The main difference between ng-if and ng-show + ng-hide is that ng-if removes the HTML element completely from the DOM, whereas the ng-show + ng-hide just applies the CSS property display: none; to the elements.
+	</div>
+</div>
+
+<script>
+    angular.module("myapp", [])
+    .controller("MyController", function($scope) {
+        $scope.myData = {};
+        $scope.myData.showIt = true;
+    });
+</script>
+
+</body>
+</html>

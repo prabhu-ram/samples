@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+
+<h3>repeat of a list</h3>
+<ol>
+   <li ng-repeat="theItem in myData.items">{{theItem.text}}</li>
+</ol>
+<p></p>
+<h3>repeat of a list through a function</h3>
+<ol>
+   <li ng-repeat="theItem in myData.getItems()">{{theItem.text}}</li>
+</ol>
+<h3>repeat of name/value pairs list</h3>
+Notice the (name, value) part of the ng-repeat directive. That signals to AngularJS to iterate over the properties of an object. The name parameter will be bound to the property name, and the value parameter will be bound to the property value. The name and value parameters can be output to the HTML template just like any other JavaScript variable or object property, as you can see from the HTML template above.
+<ol>
+   <li ng-repeat="(name, value) in myData.myObject">{{name}} = {{value}}</li>
+</ol>
+The ng-repeat directive defines a set of special variables which you can use when iterating the collection. These variables are:
+<p>
+$index
+</br>
+$first
+</br>
+$middle
+</br>
+$last
+</br>
+The $index variable contains the index of the element being iterated.
+<p>
+The $first, $middle and $last contain a boolean value depending on whether the current item is the first, middle or last element in the collection being iterated. An item is "middle" if it is not first nor last. You can use these variables to generate different HTML using e.g. the ng-show / ng-hide, ng-switch, ng-if and ng-include directives described earlier.
+
+<h3>Repeating multiple elements</h3>
+In case you want to repeat more than one HTML element you would have to nest those elements inside a container element, and have the container element have the ng-repeat element, like this:
+
+<div ng-repeat="(name, value) in myData.myObject">
+   <div>{{name}}</li></div>
+   <div>{{value}}</li></div>
+</div>
+<p></p>
+
+Wrapping the element to be repeated in a root element may not always be possible though. Therefore AngularJS has the ng-repeat-start and ng-repeat-end directives which mark which element to start and end the repetition with. Here is an example:
+
+<ol>
+    <li ng-repeat-start="(name, value) in myData.myObject">{{name}}</li>
+    <li ng-repeat-end>{{value}}</li>
+</ol>
+
+
+<script>
+    angular.module("myapp", [])
+    .controller("MyController", function($scope) {
+        $scope.myData = {};
+		$scope.myData.items = [ {text : "one"}, {text : "two"}, {text : "three"} ];
+        $scope.myData.getItems = function() { return this.items; };
+ 		$scope.myData.myObject = { var1 : "val1", var2 : "val3", var3 : "val3"};
+    });
+</script>
+
+</div>
+</body>
+</html>

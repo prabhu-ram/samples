@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+  <div ng-controller="MyController" >
+  </div>
+When creating more advanced AngularJS applications, sooner or later your application will need to handle DOM events like mouse clicks, moves, keyboard presses, change events etc. AngularJS has a simple model for how to add event listeners to the HTML you generate from your views.
+<P></p>
+<h3>AngularJS Event Listener Directives</h3>
+<p>
+    You attach an event listener to an HTML element using one of the AngularJS event listener directives:
+</p>
+
+<ul>
+    <li><code>ng-click</code></li>
+    <li><code>ng-dbl-click</code></li>
+    <li><code>ng-mousedown</code></li>
+    <li><code>ng-mouseup</code></li>
+    <li><code>ng-mouseenter</code></li>
+    <li><code>ng-mouseleave</code></li>
+    <li><code>ng-mousemove</code></li>
+    <li><code>ng-mouseover</code></li>
+    <li><code>ng-keydown</code></li>
+    <li><code>ng-keyup</code></li>
+    <li><code>ng-keypress</code></li>
+    <li><code>ng-change</code></li>
+</ul>
+
+<h4>ng-click</h4>
+<div ng-controller="MyController" >
+    <div ng-click="myData.doClick()">Click here</div>
+</div>
+
+<h4>$event</h4>
+The event listener directives have a special variable named $event which you can use as parameter to the event listener function. The $event variable contains the original browser event object.
+<p></p>
+<div ng-controller="MyController" >
+    <div ng-click="myData.doClick2($event)">Click here for $event passing example</div>
+<p></p>
+You can also pass other parameters to your event listener functions. Here is an example that adds event listener function to a list of li elements:
+<p></p>
+<ul>
+        <li ng-repeat="item in myData.items"
+               ng-click="myData.doClick3(item, $event)">Click here for {{item.v}}</li>
+</ul>
+<p>
+This example iterates through a list of items, generates li elements from them, and adds click listeners to each li element. Along with the call to the click listener is passed the item JavaScript object the li element was generated based on, along with the click event object ($event).
+
+
+
+</div>
+<script>
+    angular.module("myapp", [])
+            .controller("MyController", function($scope) {
+                $scope.myData = {};
+                $scope.myData.doClick = function() {
+                    alert("clicked");
+                }
+				// returns the (x,y) where the click took place
+				$scope.myData.doClick2 = function(event) {
+                    alert("clicked: " + event.clientX + ", " + event.clientY);
+                }
+
+				$scope.myData.items = [{ v: "1"}, { v: "2"}, { v : "3"} ];
+                $scope.myData.doClick3 = function(item, event) {
+                    alert("clicked: " + item.v + " @ " + event.clientX + ": " + event.clientY);
+                }
+            } );
+</script>
+</body>
+</html>
+

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+    <form>
+        <input type="text" name="firstName" ng-model="myForm.firstName"> First name<br/>
+        <input type="text" name="lastName"  ng-model="myForm.lastName"> Last name<br/>
+    </form>
+
+    <div>
+        {{myForm.firstName}} {{myForm.lastName}}
+    </div>
+<p></p>
+This example binds the two input fields in the form to the $scope.myForm.firstName and $scope.myForm.lastName properties. The two properties both have a value set in the controller function. These values will be displayed in the input fields when the page is first rendered. When the user types in something in the text fields it will get copied into the these properties too.
+<p></p>
+The example also contains two interpolation directives ({{}}). These two directives will insert the value of the myForm.firstName and myForm.lastName below the form fields. When you enter something in the text boxes it will be copied into the myForm.firstName and myForm.lastName properties. From there it will be inserted into the HTML by the two interpolation directives. This data binding happens while the user enters data in the form fields, so the interpolation directives will update the values while typing (this looks cool, but I <b>cannot remember the last time I actually needed this in a web app form).</b>
+<p></p>
+<h3> checkbox example</h3>
+<p></p>
+If you bind a checkbox (<code><input type="checkbox">)</code> to a model property, the model property will be set to true if the checkbox is checked, and false if not.
+<p></p>
+If you need other values instead of true and false inserted into your model, you can use the ng-true-value and ng-false-value directives, like this:
+<p></p>
+ <input type="checkbox" ng-model="myForm.wantNewsletter"
+                        ng-true-value="yes" ng-false-value="no" >
+<p></p>
+Radio buttons are also easy to bind to model properties. If you have a group of radio buttons, just bind them all to the same model property. The radio button that is chosen will have its value copied into the model property. Here is an example:
+<p></p>
+<input type="radio" ng-model="myForm.whichNewsletter" value="weeklyNews">    
+<input type="radio" ng-model="myForm.whichNewsletter" value="monthlyNews"> 
+</div>
+
+
+<script>
+    var module = angular.module("myapp", []);
+    module .controller("MyController", function($scope) {
+    	$scope.myForm = {};
+    	$scope.myForm.firstName = "Joe";
+    	$scope.myForm.lastName  = "Johnson";
+		
+    } );
+</script>
+
+</body>
+</html>

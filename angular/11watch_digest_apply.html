@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+
+<head>
+</head>
+
+<body ng-app="myapp">
+<div ng-controller="myController" >
+<p>
+    The AngularJS <code>$scope</code> functions <code>$watch()</code>, <code>$digest()</code> and
+    <code>$apply()</code> are some of the central functions in AngularJS. Understanding
+    <code>$watch()</code>, <code>$digest()</code> and <code>$apply()</code> is essential in order to understand
+    AngularJS.
+</p>
+
+<p>
+    When you create a data binding from somewhere in your view to a variable on the <code>$scope</code> object,
+    AngularJS creates a "watch" internally. A watch means that AngularJS watches changes in the variable on the
+    <code>$scope</code> object. The framework is "watching" the variable. Watches are created using the
+    <code>$scope.$watch()</code> function which I will cover later in this text.
+</p>
+
+<p>
+    At key points in your application AngularJS calls the <code>$scope.$digest()</code> function. This function
+    iterates through all watches and checks if any of the watched variables have changed. If a watched variable
+    has changed, a corresponding listener function is called. The listener function does whatever work it needs
+    to do, for instance changing an HTML text to reflect the new value of the watched variable. Thus, the
+    <code>$digest()</code> function is what triggers the data binding to update.
+</p>
+
+<p>
+    Most of the time AngularJS will call the <code>$scope.$watch()</code> and <code>$scope.$digest()</code> functions
+    for you, but in some situations you may have to call them yourself. Therefore it is really good to know how they
+    work.
+</p>
+
+<p>
+    The <code>$scope.$apply()</code> function is used to execute some code, and then call <code>$scope.$digest()</code>
+    after that, so all watches are checked and the corresponding watch listener functions are called. The
+    <code>$apply()</code> function is useful when integrating AngularJS with other code.
+</p>
+
+This example binds the $scope.data.time variable to an interpolation directive which merges the variable value into the HTML page. This binding creates a watch internally on the $scope.data.time variable.
+<p></p>
+The example also contains two buttons. The first button has an ng-click listener attached to it. When that button is clicked the $scope.updateTime() function is called, and after that AngularJS calls $scope.$digest() so that data bindings are updated.
+<p></p>
+The second button gets a standard JavaScript event listener attached to it from inside the controller function. When the second button is clicked that listener function is executed. As you can see, the listener functions for both buttons do almost the same, but when the second button's listener function is called, the data binding is not updated. That is because the $scope.$digest() is not called after the second button's event listener is executed. Thus, if you click the second button the time is updated in the $scope.data.time variable, but the new time is never displayed.
+	<p></p>
+    {{data.time}}
+    <br/>
+    <button ng-click="updateTime()">update time - ng-click</button>
+    <button id="updateTimeButton"  >update time through js</button>
+</div>
+
+<script>
+    var module       = angular.module("myapp", []);
+    var myController1 = module.controller("myController", function($scope) {
+ 
+        $scope.data = { time : new Date() };
+
+        $scope.updateTime = function() {
+            $scope.data.time = new Date();
+        }
+
+        document.getElementById("updateTimeButton")
+                .addEventListener('click', function() {
+            // alert("update time clicked");
+            $scope.data.time = new Date();
+			// since digest() is not called, the data binding is not evalated by this
+			// js call as against the ng-click call
+			// if want the binding to update then need to call the following:
+			// uncomment the following line
+			// $scope.$digest();
+        });
+    });
+</script>
+
+</body>
+
+</html>
+

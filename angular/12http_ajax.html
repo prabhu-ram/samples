@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+  <div ng-controller="MyController" >
+
+<h2>The $http Service</h2>
+
+The $http service is the easiest way to send AJAX calls to your web server. <b>Remember, that AJAX calls cannot be sent to a different domain than the domain from which the HTML page making the AJAX calls is loaded.</b> 
+<p></p>
+Notice how the controller function registered with the module takes two parameters: A $scope object (as always) and an extra $http object. The $http object (or "service") is used to make AJAX calls.
+<p></p>
+The the $http.get() function returns a "promise" object. This promise object has a success() and an error() function. By calling these functions and pass a function to them as parameter you can control what happens when the AJAX call finishes. If the AJAX call succeeds (the server sends back an HTTP code between 200 and 209), the function passed to the success() function is executed. If the AJAX call fails (all other codes except for redirects), the function passed to the error() method is executed.
+<p></p>
+
+    <button ng-click="myData.doClick(item, $event)">Send AJAX Request</button>
+    <br/>
+    Data from server: {{myData.fromServer}}
+
+<p></p>
+<h3>$http Functions</h3>
+
+<p>
+    The <code>$http</code> service has several functions you can use to send AJAX
+    requests. These are:
+</p>
+
+<ul>
+    <li><code>$http.get(url, config)</code></li>
+    <li><code>$http.post(url, data, config)</code></li>
+    <li><code>$http.put(url, data, config)</code></li>
+    <li><code>$http.delete(url, config)</code></li>
+    <li><code>$http.head(url, config)</code></li>
+</ul>
+
+<p>
+    Notice that the <code>$http.post()</code> and <code>$http.put()</code> functions take a <code>data</code>
+    parameter which contains data to be sent to the server. The rest of the <code>$http</code> functions cannot take
+    a data parameter.
+</p>
+
+<p>
+    The <code>data</code> parameter will be converted to a JSON string. This string will be be included in
+    the request body when the HTTP request is sent to the server. AngularJS will consider all properties
+    starting with a <code>$</code> as private, and thus exclude these from the string. If you need
+    to include properties starting with a <code>$</code> in the data string, convert the <code>data</code>
+    object to a string yourself using <code>JSON.stringify(data)</code>.
+</p>
+
+
+<a name="http-as-a-function"></a>
+<h3>$http as a Function</h3>
+
+<p>
+    You can also use the <code>$http</code> service as a function directly, like this:
+</p>
+
+
+<pre class="codeBox">
+var promise = $http(config);
+</pre>
+
+<p>
+    In this case the URL and HTTP method are also set inside the <code>config</code> object.
+    The <code>config</code> object is explained in the following section.
+</p>
+
+
+
+<a name="config-parameter"></a>
+<h3>The config Parameter</h3>
+
+<p>
+    The <code>config</code> parameter passed to the different <code>$http</code> functions controls the
+    HTTP request sent to the server. The <code>config</code> parameter is a JavaScript object which can
+    contain the following properties:
+</p>
+
+<ul>
+    <li><code>method</code></li>
+    <li><code>url</code></li>
+    <li><code>params</code></li>
+    <li><code>headers</code></li>
+    <li><code>timeout</code></li>
+    <li><code>cache</code></li>
+    <li><code>transformRequest</code></li>
+    <li><code>transformResponse</code></li>
+</ul>
+
+<p>
+    The <code>method</code> property can be used to set the HTTP method for pthe request. The method is
+    one of either <code>GET, POST, PUT, DELETE</code> or <code>HEAD</code>. This property is normally
+    set implicitly via the function you choose to call on the <code>$http</code> service, so you will
+    rarely need to set this property in practice.
+</p>
+
+<p>
+    The <code>url</code> property can be used to set the URL of the AJAX call. This is already provided
+    to the various <code>$http</code> functions, so you will rarely need to set this again in the <code>config</code>
+    object.
+</p>
+
+<p>
+    The <code>params</code> property is used to set any additional request parameters to be appended
+    to the URL query string. The <code>params</code> property is a JavaScript object with one property
+    per request parameter to add.
+</p>
+
+<p>
+    The <code>headers</code> property is used to set any additional HTTP headers you want sent to the
+    server. The <code>headers</code> property is a JavaScript object with one property per header.
+</p>
+
+<p>
+    The <code>timeout</code> property is used to set the timeout for the AJAX call. When the timeout
+    limit is reached, the AJAX call is aborted. The timeout is specified in milliseconds.
+</p>
+
+<p>
+    The <code>cache</code> property is used to enable XHR GET request caching.
+</p>
+
+<p>
+    The <code>transformRequest</code> property is used to set a function which can transform the
+    request object before it is sent to the server.
+</p>
+
+<p>
+    The <code>transformResponse</code> property is used to set a function which can transform
+    the response sent back from the server, before it is passed to your application.
+</p>
+
+<a name="success-error-functions-on-promise-object"></a>
+<h3>The success() And error() Functions of The Promise Object</h3>
+<p>
+    As mentioned earlier the various AJAX functions on the <code>$http</code> service return a promise object.
+    This promise object has two functions called <code>success()</code> and <code>error()</code>. Each of these
+    two functions take a callback function as parameter. If the AJAX request succeeds, the callback function
+    passed to the <code>success()</code> function is executed. If the AJAX request fails, the callback function
+    passed to the <code>error()</code> function is called.
+</p>
+
+<p>
+    Inside the <code>success()</code> and <code>error()</code> function you should set the appropriate
+    values on the <code>$scope</code> object. That is the way to get the data or error message out
+    to the user. Update the <code>$scope</code> object with data, and AngularJS will trigger the
+    HTML template rendering so the data can be made visible to the user.
+</p>
+
+<p>
+    Both functions take the following parameters:
+</p>
+
+<ul>
+    <li><code>data</code></li>
+    <li><code>status</code></li>
+    <li><code>headers</code></li>
+    <li><code>config</code></li>
+</ul>
+
+<p>
+    The <code>data</code> parameter is the JSON object returned by the server. The <code>$http</code> service
+    assumes that your server sends back JSON.
+</p>
+
+<p>
+    The <code>status</code> parameter is the HTTP status code returned by the server along with the response.
+</p>
+
+<p>
+    The <code>headers</code> parameter is a function that can be used to obtain any HTTP response headers
+    returned along with the response. You get a header by calling <code>headers([headerName]);</code>. As you
+    can see, the <code>headers()</code> function take an array of header names as parameter. The
+    AngularJS documentation is a bit vague about what the function returns, but I suspect it returns a JavaScript object
+    with one key, value pair for each header, with the header name as the key (property name).
+</p>
+
+<p>
+    The <code>config</code> parameter is the configuration object that was used to create the given HTTP request (AJAX call).
+    In other words, the <code>config</code> object which was passed as parameter to the <code>$http</code> ajax function
+    call that created this AJAX call, and thereby this promise object.
+</p>
+
+  </div>
+
+  <script>
+    angular.module("myapp", [])
+        .controller("MyController", function($scope, $http) {
+            $scope.myData = {};
+            $scope.myData.doClick = function(item, event) {
+
+                var responsePromise = $http.get("/angularjs-examples/json-test-data.jsp");
+
+                responsePromise.success(function(data, status, headers, config) {
+                    $scope.myData.fromServer = data.title;
+                });
+                responsePromise.error(function(data, status, headers, config) {
+                    alert("AJAX failed!");
+                });
+            }
+
+
+        } );
+  </script>
+
+</body>
+
+</html>

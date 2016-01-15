@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+<h3>ng-options</h3>
+
+Instead of using static HTML options you can have AngularJS create option elements based on data from the $scope object. You do so using the ng-options directive inside the select element. Here is an example:
+<p></p>
+    <form>
+        <select ng-model="myForm.car"
+                ng-options="obj.id as obj.name for obj in myForm.options">
+        </select>
+    </form>
+
+    <div>
+        {{myForm.car}}
+    </div>
+<p></p>
+The ng-options directive follows the following format:
+
+<p></p>
+optionBinding expression   dataSource expression
+The dataSource expression speficies what data in the $scope object is to be used as data source for the option elements. In the example above, the dataSource expression is this part:
+
+<p></p>
+for obj in myForm.options
+<p></p>
+It defines obj as each object in the myForm.options array. Thus, an option element will be generated from each element in the myForm.options array in the $scope object.
+
+<p></p>
+The optionBinding expression specifies what properties are to be used as value and label for each option element. In the example above the optionBinding is this part:
+
+<p></p>
+obj.id as obj.name
+<p></p>
+This defines the obj.id property of each object as the value of each option element generated, and the obj.name property as the label. If you want the value and label to come from the same property, just leave out the as obj.name part (the label part of the expression).
+
+<p></p>
+You can call functions on the $scope object from inside both the optionBinding expression and dataSource expression. Here is an example:
+
+<p></p>
+obj.id as getLabelName(obj) for obj in getOptionArray()
+<p></p>
+This example will use the value returned from the getLabelName(obj) function call as label, and will iterate the objects returned by the getOptionArray() function call.
+<p></p>
+
+You can create option groups (<code> &lt;optgroup&gt; </code> HTML elements with option elements inside) by adding a group by section to the optionBinding expression. Here is an example:
+
+<p></p>
+obj.id as obj.name group by obj.type
+<p></p>
+This example will group the generated option elements into optgroup elements using the obj.type property to determine which option elements to group together. Objects with the same value in the obj.type property will be grouped into the same optgroup element.
+<p></p>
+
+You can also iterate the properties of an object instead of iterating an array of objects. Here is an example:
+<p></p>
+
+propName as propValue for (propName, propValue) in objectWithProperties
+<p></p>
+This example will bind the property name as the option element value and the property value as the label, of all properties in the $scope.objectWithProperties object.
+
+<h3>Empty options</h3>
+If the value set for a select box in the $scope object by the controller function does not match a value attribute of any of the option elements, AngularJS inserts an empty option element in the select box.
+<p></p>
+You can set a label for this empty option element by inserting an option element in the HTML, like this:
+<p></p>
+    <form>
+        <select ng-model="myForm.car"
+                ng-options="obj.id as obj.name for obj in myForm.options">
+            <option value="">Please choose a car</option>
+        </select>
+    </form>
+    <div>
+        {{myForm.car}}
+    </div>
+<p></p>
+
+<h3> Selecting Multiple Options </h3>
+
+If you need a select box that enables the user to choose multiple options, you need to insert the multiple="true" attribute inside the <select> element.
+<p></p>
+Once you enable multiple option selection, the data binding changes. Instead of binding the
+<i>select </i> element to a single string value, it is now bound to an array of values. Thus, you also set the selected values using an array. Here is an example showing that:
+<p></p>
+<p></p>
+
+<form>
+        <select multiple="true" ng-model="myForm.car"
+                ng-options="obj.id as obj.name for obj in myForm.options">
+        </select>
+    </form>
+
+    <div>
+        {{myForm.car}}
+    </div>
+</div>
+
+
+<script>
+    angular.module("myapp", [])
+        .controller("MyController", function($scope) {
+            $scope.myForm = {};
+            $scope.myForm.car  = "nissan";
+
+            $scope.myForm.options = [
+              { id : "nissan", name: "Nissan" }
+             ,{ id : "toyota", name: "Toyota" }
+             ,{ id : "fiat"  , name: "Fiat" }
+             ];
+
+        } );
+</script>
+
+</body>
+</html>

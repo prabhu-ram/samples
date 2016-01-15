@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+
+<head>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+<h2>Directive Types</h2>
+<p>
+    You can implement the following types of directives:
+</p>
+
+<ul>
+    <li>Element directives</li>
+    <li>Attribute directives</li>
+    <li>CSS class directives</li>
+    <li>Comment directives</li>
+</ul>
+
+<p>
+    Of these, AngularJS recommends that you try to use element and attribute directives, and leave the CSS class
+    and comment directives (unless absolutely necessary).
+</p>
+
+<p>
+    The type of a directive determines how the directive is activated. An element directive is activated when
+    AngularJS finds a matching HTML element in the HTML template. An attribute directive is activated
+    when AngularJS finds a matching HTML element attribute. A CSS class directive is activated when
+    AngularJS finds a matching CSS Class. And, a comment directive is activated when AngularJS finds
+    a matching HTML comment.
+</p>
+
+
+
+<a name="a-basic-directive"></a>
+<h2>A Basic Directive</h2>
+
+<p>
+    You register a directive with a module. Here is an example of how that looks:
+</p>
+<pre>&lt;foo&gt;This text will be replaced&lt;foo&gt;</pre> as follows:
+<br>
+<foo>This text will be replaced</foo>
+<p>
+
+<p>
+    Notice the call to the <code>directive()</code> function on the module. When you call this function
+    you can register a new directive. The first parameter to the <code>directive()</code> function call
+    is the name of the directive to register. This name is what you use in your HTML templates when you
+    want to activate the directive. In this example I have used the name '<code>div</code>' which means
+    that the directive is activated every time an HTML element named <code>div</code> is found in the
+    HTML template.
+</p>
+
+<p>
+    The second parameter passed to the <code>directive</code> function is a factory function. This
+    function should return a directive definition when invoked. AngularJS will invoke this function
+    to obtain a JavaScript object which contains the definition of the directive. If you look inside
+    the function in the above example you will see that it does indeed return a JavaScript object.
+</p>
+
+<p>
+    The JavaScript object returned from the factory function has two properties: A <code>restrict</code>
+    field and a <code>template</code> field.
+</p>
+
+<p>
+    The <code>restrict</code> field is used to set if the directive should be activated by a matching
+    HTML element, or an element attribute. By setting <code>restrict</code> to <code>E</code> you specify
+    that only HTML elements named <code>div</code> should activate the directive. By setting <code>restrict</code>
+    to <code>A</code> you specify that only HTML attributes named <code>div</code> should activate the directive.
+    You can also use a value of <code>AE</code> which will match both HTML element names and attribute names.
+</p>
+
+<p>
+    The <code>template</code> field is an HTML template that will replace the content of the matched
+    <code>div</code> element. It will work as if the content of the matched <code>div</code> element had not been there,
+    and instead this HTML template had been located in the same place.
+</p>
+<h2>The template and templateUrl Properties</h2>
+
+<p>
+    The easiest way to create your own directives is as shown in the example above. Your
+    directive is intended to generate HTML, and you put that HTML inside the <code>template</code>
+    attribute of the directive definition object.
+</p>
+<p>
+    In case that HTML template grows big, it is gets hard to write and maintain the HTML inside
+    a JavaScript string. You can then put the HTML into its own file and have AngularJS load
+    it from that file. You do so by putting the URL of the HTML template file into the
+    <code>templateUrl</code> property of the directive definition object. Here is an example:
+</p>
+<pre>&lt;seconddirective&gt; &lt;seconddirective&gt; </pre>
+<seconddirective></seconddirective>
+<p></p>
+<b>Note:</b> the file include in the above won't work on Chrome as chrome will block.  Works if served out of a webserver.
+<p></p>
+
+<h2>Isolating the $scope From the Directive</h2>
+
+<p>
+    In the example above the <code>userinfo</code> directive was bound hard to the <code>$scope</code> variable
+    because the HTML template referenced the <code>textToInsert</code> property directly. Referencing <code>$scope</code>
+    variables directly makes it hard to reuse the directive more than once within the same controller, since the
+    <code>$scope</code> variables typically have the same values everywhere inside the same controller. For instance,
+    if you wanted to have this HTML in your page.
+</p>
+<pre class="codeBox">
+&lt;userinfo&gt;&lt;/userinfo&gt;
+&lt;userinfo&gt;&lt;/userinfo&gt;
+</pre>
+
+<p>
+    Then the two <code>&lt;userinfo&gt;</code> elements would be replaced by the same HTML template, which is bound
+    to the same <code>$scope</code> variable. The result would be that the two <code>&lt;userinfo&gt;</code>
+    elements would be replaced by the exact same HTML code.
+</p>
+
+<p>
+    To be able to bind the two <code>&lt;userinfo&gt;</code> elements to different values in the <code>$scope</code>
+    object, you need to bind the HTML template to an <i>isolate scope</i>.
+</p>
+
+<p>
+    An isolate scope is a separate scope object tied to the directive. Here is how you define it in the
+    directive definition object:
+</p>
+
+<userinfo user="first"></userinfo>
+<br>
+<userinfo user="second"></userinfo>
+<p>
+    These two <code>&lt;userinfo&gt;</code> element contain a <code>user</code> attribute. The value of
+    these attributes contain the names of properties in the <code>$scope</code> object which are to be
+    referenced by the isolate scope object's <code>userinfo</code> property.
+</p>
+<h2>The compile() and link() Functions</h2>
+
+<p>
+    If you need to do something more advanced inside your directive, something that you cannot
+    do with an HTML template, you can use the <code>compile()</code> and <code>link()</code>
+    functions instead.
+</p>
+
+<p>
+    The <code>compile()</code> and <code>link()</code> functions define how the directive is to
+    modify the HTML that matched the directive. 
+</p>
+
+<p>
+    The <code>compile()</code> function is called once for each occurrence of the directive in the HTML page.
+    The <code>compile()</code> function can then do any one-time configuration needed of the element containing the
+    directive.
+</p> 
+
+<p>    
+    The <code>compile()</code> function finishes by returning the <code>link()</code>
+    function. The <code>link()</code> function is called every time the element is to be
+    bound to data in the <code>$scope</code> object.
+</p>
+
+<p>
+    As mentioned, you add the <code>compile()</code> function to
+    the directive definition object, and the <code>compile()</code> function has to return
+    the <code>link()</code> function when executed.
+<p>
+<b> Skipping this section as it can be picked up later.  Also skipped transclusion for now </b>
+
+<script>
+myapp = angular.module("myapp", []);
+
+myapp.controller("MyController", function($scope) {
+	$scope.textToInsert = "text from custom element directive";
+    $scope.first = {};
+	$scope.first.firstName = "First";
+	$scope.first.lastName = "LastName";
+    $scope.second = {};
+	$scope.second.firstName = "Second";
+	$scope.second.lastName = "LastName";
+});
+
+myapp.directive('foo', function() {
+    	var directive = {};
+
+    	directive.restrict = 'E'; /* restrict this directive to elements */
+
+    	directive.template = "My first directive: {{textToInsert}}";
+    	return directive;
+	});
+
+// file containing html markup
+myapp.directive('seconddirective', function() {
+    var directive = {};
+
+    directive.restrict = 'E'; /* restrict this directive to elements */
+    directive.templateUrl = '19template.html';
+
+    return directive;
+});
+
+myapp.directive('userinfo', function() {
+    var directive = {};
+
+    directive.restrict = 'E';
+
+    directive.template = "User : {{user.firstName}} {{user.lastName}}";
+
+    directive.scope = {
+        user : "=user"
+    }
+
+    return directive;
+})
+</script>
+</body>
+
+</html>
+

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+	<h3>Filters</h3>
+Some of the directives covered above support filtering. This section will explain how filtering works.
+<p></p>
+	<div ng-repeat="item in myData.items | filter: itemFilter">
+		{{item}}
+	</div>
+<p></p>
+Notice the | filter: itemFilter part of the declaration above. That part is the filter definition. The | filter: part tells AngularJS to apply a filter to the myData.items array. The itemFilter is the name of the filter function. This function has to be present on the $scope object, and it has to return either true or false. If the filter function returns true, then the element from the array is used by the ng-repeat directive. If the filter function returns false, the element is ignored. 
+<p></p>
+<h3>Filters	Available</h3>
+date	Formats the variable as a date according to the given date format
+<br>
+currency:	Formats the variable as a number with a currency symbol
+<br>
+number:	Formats the variable as a number
+<br>
+lowercase:	Converts the variable to lowercase
+<br>
+uppercase:	Converts the variable to uppercase
+<br>
+json:	Converts the variable to a JSON string
+<p></p>
+Date:
+<span>{{myData.theDate | date: 'dd-MM-yyyy'}}</span>
+<br>
+Number:
+<span>{{myData.theNumber | number: 2}}</span>
+<br>
+text case:
+<span>{{myData.mixedCaseText}}, {{myData.mixedCaseText | lowercase}}, {{myData.mixedCaseText | uppercase}}</span>
+
+<h3>Filters on arrays</h3>
+Array Filters:
+<p>
+Filter	Description
+<br>
+limitTo:	Limits the array to the given size, beginning from some index in the array. The limitTo filter also works on strings.
+<br>
+filter:	A general purpose filter.
+<br>
+orderBy:	Sorts the array based on provided criteria.
+<p>
+<span>{{myData.mixedCaseText}} limited to 3 charactersr:{{myData.mixedCaseText | limitTo: 3}}</span>
+<p></p>
+<p></p>
+The filter filter is a special filter which can do a lot of different things. In its simplest form it simply calls a function on the $scope object. This function must return true or false. True is returned if the filter accepts the value passed to it. False is returned if the filter cannot accept the value. If the filter cannot accept the value, the value is not included in the array resulting from the filtering. Here is an example:
+<p></p>
+
+<ol>
+    <li ng-repeat="item in myData.items | filter:filterArray">
+        {{item.text}} : {{$first}}, {{$middle}}, {{$last}}
+    </li>
+</ol>
+<p></p>
+This example calls the filterArray() function which filters out items which has a text property with the value two.
+<p></p>
+Here is an orderBy example:
+<br>
+<ol>
+    <li ng-repeat="item in myData.items | orderBy:sortField:reverse">
+        {{item.text}} : {{$first}}, {{$middle}}, {{$last}}
+    </li>
+</ol>
+<p></p>
+<ol>
+    <li ng-repeat="item in myData.items | orderBy:sortField:straight">
+        {{item.text}} : {{$first}}, {{$middle}}, {{$last}}
+    </li>
+</ol>
+<p></p>
+The orderBy filter takes a $scope variable as parameter. In this example that variable is named sortField. The value of this variable is the name of the property on the sorted data objects which is used to sort the data objects. In this example the sortField property is set to text which means that the data object's text property is used to sort the data objects.
+<br>
+The orderBy filter can also take a second $scope variable as parameter. In this example that variable is named reverse. The value of this variable determines if the data objects are to be sorted in their natural order, or the reverse order of that. In this case the reverse variable is set to true, meaning the data objects will be sorted in reverse order.
+<p></p>
+Filters can be chained:
+<div>Actual: {{myData.mixedCaseText}}</div>
+<div>Limit to 5 chars: {{myData.mixedCaseText | limitTo: 5 }}</div>
+<div>Uppercased: {{myData.mixedCaseText | limitTo: 5 | uppercase}}</div>
+<p></p>
+
+<b>Assigning Filter Output To Variables</b>
+<br>
+It is possible to assign the output of a filter to a temporary variable which you can then refer to later in your view. This example assigns the output of the filtering to the filteredItems variable. The example then refers to this variable inside the {{ }} directive under the ol element. 
+<p></p>
+<ol>
+    <li ng-repeat="item in filteredItems = ( myData.items | filter:filterArray) ">
+        {{item.text}} : {{$first}}, {{$middle}}, {{$last}}
+    </li>
+</ol>
+<div>filteredItem temp variable: {{filteredItems}}</div>
+<p></p>
+<b>Custom filters</b>
+<p></p>
+This example registers a filter with AngularJS which can filter strings. The filter returns the first 3 characters of the string. The filter is registered with the name myFilter. It is this name you will have to use when referencing the filter, as you can see in the beginning of the filter.
+<div>Original: {{myData.mixedCaseText}}</div>
+<div>Filtered: {{myData.mixedCaseText | myFilter}}</div>
+<p></p>
+If your filter needs more input parameters, add more parameters to the filter function, and add the parameters after the filter name and a : when referencing it. Here is an example:
+<div>Original: {{myData.mixedCaseText}}</div>
+<div>Filtered: {{myData.mixedCaseText | myFilter2:2:8}}</div>
+</div>
+
+<script>
+  var module = angular.module("myapp", []);
+    module.controller("MyController", function($scope) {
+      $scope.myData = {};
+      $scope.myData.items  = [ {text : "one"}, {text : "two"}, {text : "three"}, {text : "four"}, {text : "five"} ];
+      $scope.myData.theDate = new Date();
+      $scope.myData.theNumber = 17.121;
+      $scope.myData.mixedCaseText = "CamelCaseText";
+
+	  $scope.sortField = "text";
+      $scope.reverse   = true;
+      $scope.straight   = false;
+
+      $scope.itemFilter = function(item) {
+        if(item.text == "two") return false;
+          return true;
+        }
+
+		$scope.filterArray = function(item) {
+                if(item.text == "two") return false;
+                return true;
+        }
+    });
+
+	module.filter('myFilter', function() {
+        return function(stringValue) {
+            return stringValue.substring(0,3);
+        };
+    });
+
+    module.filter('myFilter2', function() {
+        return function(stringValue, startIndex, endIndex) {
+            return stringValue.substring(parseInt(startIndex), parseInt(endIndex));
+        };
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AngularJS Routes example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular-route.min.js"></script>
+</head>
+
+<body ng-app="sampleApp">
+
+<b>Note: </b>
+Be sure to see this through a web server. Chrome will block the templateUrls.
+<p>
+
+       <p>
+    AngularJS routes enable you to create different URLs for different content in your application.
+    Having different URLs for different content enables the user to bookmark URLs to specific content,
+    and send those URLs to friends etc. In AngularJS each such bookmarkable URL is called a <i>route</i>.
+</p>
+
+<p>
+    AngularJS routes enables you to show different content depending on what route is chosen.
+    A route is specified in the URL after the <code>#</code> sign. Thus, the following URL's all point to the same
+    AngularJS application, but each point to different routes:
+</p>
+
+<pre class="codeBox">
+    http://myangularjsapp.com/index.html#books
+    http://myangularjsapp.com/index.html#albums
+    http://myangularjsapp.com/index.html#games
+    http://myangularjsapp.com/index.html#apps
+</pre>
+
+<p>
+    When the browser loads these links, the same AngularJS application will be loaded (located at <code>http://myangularjsapp.com/index.html</code>),
+    but AngularJS will look at the route (the part of the URL after the <code>#</code>) and decide what HTML template to show.
+</p>
+
+<p>
+    At this point it may sound a little abstract, so let us look at a fully working AngularJS route example:
+</p>
+
+<pre class="codeBox">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;title&gt;AngularJS Routes example&lt;/title&gt;
+    &lt;script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"&gt;&lt;/script&gt;
+    &lt;script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular-route.min.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body ng-app="sampleApp"&gt;
+
+&lt;a href="#/route1"&gt;Route 1&lt;/a&gt;&lt;br/&gt;
+&lt;a href="#/route2"&gt;Route 2&lt;/a&gt;&lt;br/&gt;
+
+
+&lt;div ng-view&gt;&lt;/div&gt;
+
+&lt;script&gt;
+    var module = angular.module("sampleApp", ['ngRoute']);
+
+    module.config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider.
+                when('/route1', {
+                    templateUrl: 'angular-route-template-1.jsp',
+                    controller: 'RouteController'
+                }).
+                when('/route2', {
+                    templateUrl: 'angular-route-template-2.jsp',
+                    controller: 'RouteController'
+                }).
+                otherwise({
+                    redirectTo: '/'
+                });
+        }]);
+
+    module.controller("RouteController", function($scope) {
+
+    })
+&lt;/script&gt;
+</pre>
+
+
+<p>
+    Each part of this sample application will be explained in the following sections.
+</p>
+
+
+<a name="including-angularjs-route-module"></a>
+<h2>Including the AngularJS Route Module</h2>
+
+<p>
+    The first thing to notice in the example application above is the extra JavaScript included inside the
+    <code>head</code> section:
+</p>
+
+<pre class="codeBox">
+&lt;script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular-route.min.js"&gt;&lt;/script&gt;
+</pre>
+
+<p>
+    The AngularJS Route module is contained in its own JavaScript file. To use it we must include in
+    our AngularJS application.
+</p>
+
+
+
+<a name="declaring-a-dependency-on-the-angularjs-route-module"></a>
+<h2>Declaring a Dependency on the AngularJS Route Module</h2>
+
+<p>
+    The second thing to notice is that the applications's AngularJS module (called <code>sampleApp</code>)
+    declares a dependency on the AngularJS route module:
+</p>
+
+<pre class="codeBox">
+var module = angular.module("sampleApp", <b>['ngRoute']</b>);
+</pre>
+
+<p>
+    The application's module needs to declare this dependency in order to use the <code>ngRoute</code> module.
+    This is explained in more detail in my modularization and dependency injection tutorial,
+    in the section about <a href="/angularjs/dependency-injection.html#dependencies-between-modules">dependencies-between-modules</a>.
+</p>
+
+
+
+<a name="ngview-directive"></a>
+<h2>The ngView Directive</h2>
+
+<p>
+    The third thing to notice in the example above is the use of the <code>ngView</code> directive:
+</p>
+
+<pre class="codeBox">
+&lt;div ng-view&gt;&lt;/div&gt;
+</pre>
+
+<p>
+    Inside the <code>div</code> with the <code>ngView</code> directive (can also be written <code>ng-view</code>)
+    the HTML template specific to the given route will be displayed.
+</p>
+
+
+
+<a name="configuring-the-routeprovider"></a>
+<h2>Configuring the $routeProvider</h2>
+
+<p>
+    The fourth thing to notice in the example shown at the beginning of this text is the configuration
+    of the <code>$routeProvider</code>. The <code>$routeProvider</code> is what creates the <code>$route</code>
+    service. By configuring the <code>$routeProvider</code> before the <code>$route</code> service is created
+    we can set what routes should result in what HTML templates being displayed.
+</p>
+
+<p>
+    Here is the code from the example:
+</p>
+
+<pre class="codeBox">
+&lt;script&gt;
+    module.config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider.
+                when('/route1', {
+                    templateUrl: 'angular-route-template-1.jsp',
+                    controller: 'RouteController'
+                }).
+                when('/route2', {
+                    templateUrl: 'angular-route-template-2.jsp',
+                    controller: 'RouteController'
+                }).
+                otherwise({
+                    redirectTo: '/'
+                });
+        }]);
+&lt;/script&gt;
+</pre>
+
+<p>
+    The <code>$routeProvider</code> is configured in the module's <code>config()</code> function.
+    We pass a configuration function to the module's <code>config()</code> function which takes
+    the <code>$routeProvider</code> as parameter. Inside this function we can now configure
+    the <code>$routeProvider</code>.
+</p>
+
+<p>
+    The <code>$routeProvider</code> is configured via calls to the <code>when()</code> and <code>otherwise()</code>
+    functions.
+</p>
+
+<p>
+    The <code>when()</code> function takes a route path and a JavaScript object as parameters.
+</p>
+
+<p>
+    The
+    route path is matched against the part of the URL after the # when the application is loaded.
+    As you can see, the two route paths passed to the two <code>when()</code> function calls match
+    the two route paths in the <code>href</code> attribute of the links in the same example.
+</p>
+
+<p>
+    The JavaScript object contains two properties named <code>templateUrl</code> and <code>controller</code>.
+    The <code>templateUrl</code> property tells which HTML template AngularJS should load and display inside
+    the <code>div</code> with the <code>ngView</code> directive. The <code>controller</code> property tells
+    which of your controller functions that should be used with the HTML template.
+</p>
+
+<p>
+    The <code>otherwise()</code> function takes a JavaScript object. This JavaScript object tells
+    AngularJS what it should do if no route paths matches the given URL. In the example above the browser
+    is redirected to the same URL with #/ as route path.
+</p>
+
+
+
+<a name="links-to-routes"></a>
+<h2>Links to Routes</h2>
+
+<p>
+    The final thing to notice in this example is the two links in the HTML page:
+</p>
+
+
+<pre class="codeBox">
+&lt;a href="#/route1"&gt;Route 1&lt;/a&gt;&lt;br/&gt;
+&lt;a href="#/route2"&gt;Route 2&lt;/a&gt;&lt;br/&gt;
+</pre>
+
+<p>
+    Notice how the part of the URLs after the <code>#</code> matches the routes configured on the
+    <code>$routeProvider</code>.
+</p>
+
+<p>
+    When one of these links is clicked, the URL in the browser window changes, and the <code>div</code>
+    with the <code>ngView</code> directive will show the HTML template matching the route path.
+</p>
+
+<a href="#/route1">Route 1</a><br/>
+<a href="#/route2">Route 2</a><br/>
+
+<!-- the route specific html will be displayed the following div with ng-view -->
+<div ng-view></div>
+<p>
+html is inserted above based on the angular route clicked
+<p>
+
+<script>
+    var module = angular.module("sampleApp", ['ngRoute']); //note: ngRoute
+
+    module.config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider.
+                when('/route1', {
+                    templateUrl: 'fragment-1.html',
+                    controller: 'RouteController'
+                }).
+                when('/route2', {
+                    templateUrl: 'fragment-2.html',
+                    controller: 'RouteController'
+                }).
+                otherwise({
+                    redirectTo: '/'
+                });
+        }]);
+
+    module.controller("RouteController", function($scope) {
+
+    })
+</script>

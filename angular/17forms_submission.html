@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+
+<head>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+<h2>Submitting Forms</h2>
+<p>
+    You can submit a form in two ways:
+</p>
+
+<ul>
+    <li>Using a <code>button</code> element with an <code>ng-click</code> attribute.</li>
+    <li>Using an <code>ng-submit</code> attribute (directive) on the <code>form</code> element.</li>
+</ul>
+
+<p>
+    In both cases a JavaScript function is called on the <code>$scope</code> object. You attach
+    this JavaScript function to the <code>$scope</code> object in your controller function.
+    The JavaScript function should send the data from the form to your server via AJAX.
+</p>
+
+<p>
+    Here is a form that uses the <code>ng-click</code> attribute on a <code>button</code> element:
+</p>
+  <form>
+    <input type="text" id="name" ng-model="myForm.name" ng-minlength="5" ng-maxlength="12"> Name <br/>
+
+    <select ng-model="myForm.car">
+      <option value="nissan">Nissan</option>
+      <option value="toyota">Toyota</option>
+      <option value="fiat">Fiat</option>
+    </select>
+
+    <button ng-click="myForm.submitTheForm()">Submit Form</button>
+  </form>
+
+ </div>
+    {{myForm.name}}
+  </div>
+  <div>
+    {{myForm.car}}
+  </div>
+<p>
+    Notice how the <code>ng-click</code> attribute points to the <code>myForm.submitTheForm()</code> function,
+    and notice how the <code>submitTheForm()</code> function is attached to the <code>$scope</code> object
+    inside the controller function.
+</p>
+
+<p>
+    Here is the same form using an <code>ng-submit</code> attribute to submit the form:
+</p>
+</div>
+
+<script>
+  angular.module("myapp", [])
+     .controller("MyController", function($scope, $http) {
+       $scope.myForm = {};
+       $scope.myForm.name = "Init Name";
+       $scope.myForm.car  = "nissan";
+
+     $scope.myForm.submitTheForm = function(item, event) {
+       console.log("--> Submitting form");
+       var dataObject = {
+          name : $scope.myForm.name,
+		  car  : $scope.myForm.car
+       };
+
+       var responsePromise = $http.post("/angularjs-examples/json-test-data.jsp", dataObject, {});
+       responsePromise.success(function(dataFromServer, status, headers, config) {
+          console.log(dataFromServer.title);
+       });
+        responsePromise.error(function(data, status, headers, config) {
+          alert("Submitting form failed!");
+       });
+     }
+
+  });
+</script>
+
+
+
+
+</body>
+
+</html>
+

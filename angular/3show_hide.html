@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+	  <h3>ng-show with false</h3>
+	  <p></p>
+      <span ng-show="myData.showIt">{{myData.text}}</span>
+	  <p></p>
+	  <h3>ng-hide with false</h3>
+      <span ng-hide="myData.showIt">{{myData.text}}</span>
+  </div>
+
+  <script>
+    angular.module("myapp", [])
+    .controller("MyController", function($scope) {
+      $scope.myData = {};
+	  $scope.myData.text = "should display this text only once";
+      $scope.myData.showIt = false;
+    });
+  </script>
+</body>
+</html>

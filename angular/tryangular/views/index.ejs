@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+  <script src="../../javascripts/myapp/MyModule.js"></script> 
+  <script src="../../javascripts/myapp/MyFactories.js"></script> 
+  <script src="../../javascripts/myapp/MyProviders.js"></script> 
+  <script src="../../javascripts/myapp/MyServices.js"></script> 
+  <script src="../../javascripts/myapp/MyControllers.js"></script>
+</head>
+
+<body ng-app="MyModule">
+
+<h2>Values defined in a module through a value() call, injected into controller</h2>
+<div ng-controller="MyController1" >
+	<p>
+	numberValue:  <i> {{ numberValue }} </i>
+	<br>
+	stringValue:  <i> {{ stringValue }} </i>
+	<br>
+	objectValue:  <i> {{ objectValue }} </i>
+	<br>
+</div>
+
+<h2>Factory</h2>
+    Factory is a function that creates values. When a service, controller etc. needs a value
+    injected from a factory, the factory creates the value on demand. Once created, the value
+    is reused for all services, controllers etc. which need it injected. Thus, a factory differs
+    from a value in that it can use a factory function to create the object it returns. You can
+    also inject values into a factory for use when creating the object. You cannot do that
+    with a value.
+<p>
+    Here is an example that defines a factory on a module, and a controller which gets the
+    factory created value injected:
+</p>
+<div ng-controller="MyController2" >
+    Value from factory: {{ factory2 }}
+</div>
+
+<h3>Injecting Values Into a Factory</h3>
+
+<p>
+    You can inject a value into a factory. It works just like when a value is injected into a
+    controller. Here is an example:
+</p>
+<div ng-controller="MyController3" >
+    Value from factory with injected value from module: {{ factory3 }} 
+</div>
+
+<h2>Service</h2>
+
+<p>
+    A service in AngularJS is a singleton JavaScript object which contains a set of functions. The functions
+    contain whatever logic is necessary for the service to carry out its work.
+</p>
+
+<p>
+    AngularJS services are created using the <code>service()</code> function on a module. Here is an example:
+</p>
+<div ng-controller="MyController4" >
+    Value from service: {{ service1 }} 
+</div>
+<p>
+    As you can see, services are defined somewhat differently than factories and values. First of all,
+    the service is defined as a separate, named function. That is because services in AngularJS are
+    created using the <code>new</code> keyword. Thus, AngularJS will do this internally:
+</p>
+<pre class="codeBox">
+var theService = new MyService();
+</pre>
+
+<h3>Injecting Values Into a Service</h3>
+<p>
+    You can inject values into a service, just like you can inject values into controllers, or services
+    into controllers etc. Here is an example:
+</p>
+<div ng-controller="MyController5" >
+    Value from service: {{ service2 }} 
+</div>
+<p>
+<p>
+    Notice how the parameter to the <code>MyService</code> function is named the same as
+    the value registered on the module. Thus, the value will be injected into the service
+    when it is created.
+</p>
+
+<h2>Providers</h2>
+    Providers in AngularJS is the most flexible form of factory you can create. You register a
+    provider with a module just like you do with a service or factory, except you use the
+    <code>provider()</code> function instead. Here is an AngularJS provider example:
+</p>
+
+<pre class="codeBox">
+var myModule = angular.module("myModule", []);
+
+myModule.provider("mySecondService", function() {
+    var provider = {};
+
+    provider.$get = function() {
+        var service = {};
+
+        service.doService = function() {
+            console.log("mySecondService: Service Done!");
+        }
+
+        return service;
+    }
+
+    return provider;
+});
+</pre>
+
+<p>
+    As you can see, the <code>provider()</code> function takes 2 parameters. The first parameter is the
+    name of the service / object which the provider creates. In this case the name is <code>mySecondService</code>.
+    The second parameter is the function which creates the provider. Note: The provider is itself a factory, so
+    at this time no actual service or object is created from the provider. Only the function creating the provider
+    is defined.
+</p>
+
+<p>
+    When you look at the function creating the provider you can see that the provider is a JavaScript object.
+</p>
+
+<p>
+    The JavaScript provider object contains a single <code>$get()</code> function. This is the factory function
+    of the provider. In other words, the <code>$get()</code> function creates whatever the provider creates
+    (service, value etc.). In the example above, the provider creates a service object which contains a single
+    service function (standard JavaScript function) called <code>doService()</code>.
+</p>
+
+<p>
+    In order to get the product of a provider injected into a controller, do specify a dependency on the provider,
+    just like you would with a service. What is injected into the controller is the product created by the provider,
+    not the provider itself. Here is an AngularJS provider injection example:
+</p>
+
+<pre class="codeBox">
+myModule.controller("MyController", function($scope, <b>mySecondService</b>) {
+
+    $scope.whenButtonClicked = function() {
+        mySecondService.doIt();
+    }
+
+});
+</pre>
+
+<p>
+    As you can see, the name of the provider is used as a parameter in the controller function.
+    The object created by the provider's <code>$get()</code> function will be injected into this parameter.
+</p>
+
+<div ng-controller="MyController6" >
+{{whenButtonClicked()}}
+</div>
+<p>
+<b>Skipped rest of providers.  Most of the stuff can be done through factories and services.  Providers which are underneath factories and services can be revisited later when need arises.  module.config() is closely related and skipped as well</b>
+
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+
+<head>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+    AngularJS has two timer services, <code>$timeout</code> and <code>$interval</code>, which you can use to call
+    functions in your application. The <code>$timeout</code> and <code>$interval</code> services are similar in their
+    functionality to JavaScript's <code>setTimeout()</code> and <code>setInterval()</code> functions (actually belonging
+    to the <code>window</code> object). The functionality of these services is also similar, so I will cover both in
+    this text.
+</p>
+
+
+
+<a name="timeout"></a>
+<h2>$timeout</h2>
+
+<p>
+    The <code>$timeout</code> service can be used to call another JavaScript function after a given time delay.
+    The <code>$timeout</code> service only schedules a single call to the function. For repeated calling of a function,
+    see <code>$interval</code> later in this text.
+</p>
+
+
+<a name="injecting-timeout"></a>
+<h3>Injecting $timeout</h3>
+
+<p>
+    To use the <code>$timeout</code> service you must first get it injected into a controller function. Here is an example
+    that injects the <code>$timeout</code> service into a controller function:
+</p>
+
+	<div>
+    	<p>{{ clock }} </p>
+    	<p>{{ clock  | date:'medium'}}</p>
+	</div>
+
+</div>
+
+<script>
+var myapp = angular.module("myapp", []);
+
+myapp.controller("MyController", function($scope, $timeout){
+
+	$scope.clock = "loading clock..."; // initialise the time variable
+    $scope.tickInterval = 3000 //ms
+
+    var tick = function() {
+        $scope.clock = Date.now() // get the current time
+        $timeout(tick, $scope.tickInterval); // reset the timer
+    }
+
+    // Start the timer
+    $timeout(tick, $scope.tickInterval);
+});
+
+</script>
+</body>
+
+</html>
+

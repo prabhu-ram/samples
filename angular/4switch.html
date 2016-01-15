@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+<div ng-controller="MyController" >
+    <div ng-switch on="myData.switch">
+		<h3>
+        <div ng-switch-when="1">Shown when switch is 1</div>
+        <div ng-switch-when="2">Shown when switch is 2</div>
+        <div ng-switch-default>Shown when switch is anything else than 1 and 2</div>
+		</h3>
+    </div>
+	<button ng-click="myData.changeVal(1)">change switch val to 1</button>
+	<button ng-click="myData.changeVal(2)">change switch val to 2</button>
+	<button ng-click="myData.changeVal(3)">change switch val to 3</button>
+</div>
+
+<script>
+    angular.module("myapp", [])
+    .controller("MyController", function($scope) {
+      $scope.myData = {};
+      $scope.myData.switch = 3;
+
+	  $scope.myData.changeVal = function(num) {
+      	$scope.myData.switch = num;
+	  };
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+This example contains two views, each with their own controller function. Each controller sets the variable data.theVar to different values.
+<p></p>
+When this example is executed, the $scope hierarchy will look like this:
+<br>
+<ul>
+<li>Root $scope
+<ul>
+	<li>$scope for myController 1</li>
+	<li>$scope for myController 2</li>
+</li>
+</ul>
+As you can see, the $scope object used by the two controllers are not the same $scope object. That is also why the example above would write out two different values for the data bindings {{data.theVar}} inside the two views. The two controller functions for the views set different values for the data.theVar variable in each their own $scope object.
+	<p>
+
+    <div ng-controller="myController1">
+
+        {{data.theVar}}
+
+    </div>
+
+    <div ng-controller="myController2">
+
+        {{data.theVar}}
+
+    </div>
+
+
+    <script>
+        var module       = angular.module("myapp", []);
+        var myController1 = module.controller("myController1", function($scope) {
+            $scope.data = { theVar : "Value One"};
+        });
+        var myController2 = module.controller("myController2", function($scope) {
+            $scope.data = { theVar : "Value Two"};
+        });
+    </script>
+
+
+</body>
+</html>

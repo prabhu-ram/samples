@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+  <script src="./2.js"></script>
+</head>
+
+<body ng-app="myapp">
+
+  <div ng-controller="MyController" >
+	  <!-- interpolation -->
+	  <h3>Interpolate</h3>
+	  <span>{{myData.text}}</span>
+	  <p></p>
+      <span>{{myData.textf()}}</span>
+	  <p></p>
+	  <h3>Bind</h3>
+	  <span ng-bind="myData.textf()"> </span>
+  </div>
+
+</body>
+</html>

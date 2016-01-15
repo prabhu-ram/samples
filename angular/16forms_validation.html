@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+</head>
+
+<body ng-app="myapp">
+<h2>Form Validation</h2>
+
+<p>
+    AngularJS has a set of form validation directives you can use. AngularJS validates form fields
+    <i>before</i> copying their value into the <code>$scope</code> properties to which the form fields are bound.
+    If a form field is invalid, its value is <i>not</i> copied into the <code>$scope</code> property
+    it is bound to. Instead the corresponding <code>$scope</code> property is cleared.
+    That is done to prevent the <code>$scope</code> properties from containing invalid values.
+</p>
+
+<p>
+    Each of the form validating directives are covered in the following sections.
+</p>
+
+
+<a name="ng-minlength-ng-maxlength"></a>
+<h2>ng-minlength + ng-maxlength</h2>
+<p>
+    The <code>ng-minlength</code> and <code>ng-maxlength</code> form validation directives can be used
+    to validate the length of data entered in a form field. Here is an example:
+</p>
+<div ng-controller="MyController" >
+    <form>
+        <input type="text" id="name" ng-model="myForm.name" ng-minlength="5" ng-maxlength="12"> Enter some chars here <br/>
+    </form>
+
+    <div>
+        {{myForm.name}}
+    </div>
+
+<h2>ng-pattern</h2>
+
+<p>
+    The <code>ng-pattern</code> directive can be used to validate the value of an input field against
+    a regular expression. Here is an example:
+</p>
+
+<input type="text" id="name" ng-model="myForm.name2" ng-pattern="/^\d+$/"> Try a number <br/>
+
+    <div>
+        {{myForm.name2}}
+    </div>
+
+
+<p>
+    The regular expressions must follow the JavaScript regular expression syntax. This example
+    defines a regular expression that matches strings of digits containing at least 1 digit.
+</p>
+
+
+<a name="ng-required"></a>
+<h2>ng-required</h2>
+
+<p>
+    The <code>ng-required</code> directive checks if the value of the form field is empty
+    or not. Actually, you just use the <code>required</code> attribute of HTML5, and AngularJS
+    detects it automatically.
+</p>
+
+<h2>ng-change example</h2>
+
+<p>
+<div ng-controller="ExampleController">
+  <input type="checkbox" ng-model="confirmed" ng-change="change()" id="ng-change-example1" />
+  <input type="checkbox" ng-model="confirmed" id="ng-change-example2" />
+  <label for="ng-change-example2">Confirmed</label><br />
+  <tt>debug = {{confirmed}}</tt><br/>
+  <tt>counter = {{counter}}</tt><br/>
+</div>
+
+<h2>Checking Field Validation State</h2>
+<p>
+    If you give the <code>&lt;form&gt;</code> element a <code>name</code> attribute, then
+    the form will be added to the <code>$scope</code> object as a property. Here is an example:
+</p>
+
+<pre class="codeBox">
+  &lt;form name="myFormNg" ng-submit="myForm.submitTheForm()" &gt;
+  ...
+  &lt;/form&gt;    
+</pre>
+<p>
+    When you call a function on the <code>$scope</code> object (a function added to the
+    <code>$scope</code> object by your controller function), you can access the
+    <code>ngFormController</code> object via its name, like this:
+</p>
+<p></p>
+
+<pre class="codeBox">
+$scope.myFormNg
+</pre>
+
+<p>
+    If you add a <code>name</code> attribute to the form fields inside the form, their
+    <code>ngModelController</code> objects will be accessible as properties on the
+    <code>ngFormController</code> object. Here is an example:
+</p>
+
+<pre class="codeBox">
+  &lt;form name="myFormNg" ng-submit="myForm.submitTheForm()" &gt;
+    &lt;input name="firstName" type="text" ng-model="myForm.firstName"&gt;
+  &lt;/form&gt;    
+</pre>
+
+<p>
+    You can now access the <code>ngModelController</code> of the <code>firstName</code>
+    input field like this:
+</p>
+
+<pre class="codeBox">
+$scope.myFormNg.firstName
+</pre>
+
+<p>
+    Both <code>ngFormController</code> and <code>ngModelController</code> objects
+    contain a set of properties that tell if the form or input field is valid.
+    The properties are:
+</p>
+
+<table class="dataTable">
+    <tr><th>Property</th><th>Description</th></tr>
+    <tr><td valign="top"><code>$pristine</code>&nbsp;&nbsp;&nbsp;</td> <td>True if the form has not been changed (no form fields has changed), false if some fields have been changed.</td></tr>
+    <tr><td valign="top"><code>$dirty</code></td>    <td>The reverse of <code>$pristine</code> - false if the form has not been changed - true if it has. </td></tr>
+    <tr><td valign="top"><code>$valid</code></td>    <td>True if the form field (or the whole form = all form fields) is valid. False if not.</td></tr>
+    <tr><td valign="top"><code>$invalid</code></td>  <td>The reverse of the <code>$valid</code> - false if the field (or all fields in the form) is valid, true if the field (or a single field in the for) is invalid. </td></tr>
+</table>
+
+<p>
+    You can use these properties to set a matching CSS class on the input fields. 
+    Here is an example :
+</p>
+<style>
+    .fieldValid {
+        border: 1px solid #00ff00;
+    }
+    .fieldInvalid {
+        border: 1px solid #ff0000;
+    }
+</style>
+
+<div ng-controller="MyController2" >
+    <form name="myFormNg" >
+        <input type="text" ng-class="myForm.getFormFieldCssClass(myFormNg.name)"
+               id="name" name="name" ng-model="myForm.name" ng-minlength="2"> Notice the border color change as you type more than 2 chars <br/>
+    </form>
+</div>
+
+<p>
+    Notice the <code>ng-class</code> directive on the <code>input</code> field. This
+    directive calls the <code>myForm.getFormFieldCssClass()</code> function using
+    <code>myFormNg.name</code> as parameter. This is the <code>ngModelController</code>
+    for the <code>name</code> <code>input</code> element. The <code>myForm.getFormFieldCssClass()</code>
+    just returns the matching CSS class as a string.
+</p>
+
+<p>
+    You can also use the validation properties to show or hide <code>div</code> elements
+    with validation messages. Here is the form from before, with a <code>div</code> added:
+</p>
+
+<div ng-controller="MyController2" >
+    <form name="myFormNg" ng-submit="myForm.submitTheForm()" novalidate>
+    
+        <input type="text" ng-class="myForm.getFormFieldCssClass(myFormNg.name)"
+               id="name" name="name" ng-model="myForm.name" ng-minlength="2"> Name <br/>
+
+        <div ng-show="myFormNg.name.$invalid">
+            You must enter a valid name.
+        </div>
+    
+    </form>
+</div>
+<p>
+    Notice the <code>ng-class</code> directive on the <code>input</code> field. This
+    directive calls the <code>myForm.getFormFieldCssClass()</code> function using
+    <code>myFormNg.name</code> as parameter. This is the <code>ngModelController</code>
+    for the <code>name</code> <code>input</code> element. The <code>myForm.getFormFieldCssClass()</code>
+    just returns the matching CSS class as a string.
+</p>
+
+<p>
+    You can also use the validation properties to show or hide <code>div</code> elements
+    with validation messages. Here is the form from before, with a <code>div</code> added:
+</p>
+<div ng-controller="MyController2" >
+    <form name="myFormNg" ng-submit="myForm.submitTheForm()" novalidate>
+    
+        <input type="text" ng-class="myForm.getFormFieldCssClass(myFormNg.name)"
+               id="name" name="name" ng-model="myForm.name" ng-minlength="2"> name <br/>
+
+		<button ng-disabled="myFormNg.name.$invalid">Button disabled if fewer than 2 chars</button>
+    </form>
+</div>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<h3>
+Foo</h3>
+</div>
+
+
+<script>
+  var app = angular.module("myapp", []);
+  app.controller("MyController", function($scope) {
+                $scope.myForm = {};
+                $scope.myForm.name = "type above";
+
+                $scope.myForm.name2 = "123";
+            } );
+
+   app.controller('ExampleController', ['$scope', function($scope) {
+      $scope.counter = 0;
+      $scope.confirmed = false;
+      $scope.change = function() {
+        $scope.counter++;
+      };
+    }]);
+
+    app.controller("MyController2", function($scope, $http) {
+                $scope.myForm = {};
+                $scope.myForm.name = "";
+
+                $scope.myForm.getFormFieldCssClass = function(ngModelController) {
+                    //console.log("getting css class: " + ngModelController.$valid) ;
+                    if(ngModelController.$pristine) return "";
+                    return ngModelController.$valid ? "fieldValid" : "fieldInvalid";
+                }
+    } );
+
+</script>
+
+</body>
+</html>

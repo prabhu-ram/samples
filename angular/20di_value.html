@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AngularJS Modularization &amp; Dependency Injection | tutorials.jenkov.com</title>
+</head>
+
+
+<body>
+
+        <h1>AngularJS Modularization &amp; Dependency Injection</h1>
+
+        <div id="articleTopDiv" style="height: 163px;">
+            
+        </div>
+        <br/>
+
+        
+        <nav>
+            <a name="pageToc"></a>
+            <div class="pageToc">
+                <div class="pageTocTitle">Table of Contents</div>
+                <div itemscope itemtype="http://schema.org/SiteNavigationElement"><ul><li><a href="#value">Value</a></li><ul><li><a href="#injecting-a-value">Injecting a Value</a></li></ul><li><a href="#factory">Factory</a></li><ul><li><a href="#injecting-values-into-a-factory">Injecting Values Into a Factory</a></li></ul><li><a href="#service">Service</a></li><ul><li><a href="#injecting-values-into-a-service">Injecting Values Into a Service</a></li></ul><li><a href="#providers">Providers</a></li><ul><li><a href="#configuring-a-provider">Configuring a Provider</a></li></ul><li><a href="#constants">Constants</a></li><li><a href="#dependencies-between-modules">Dependencies Between Modules</a></li><li><a href="#minification-safe-dependency-injection">Minification Safe Dependency Injection in AngularJS</a></li>       </ul></div>
+            </div>
+        </nav>
+        
+
+        <div id="articleBody">
+        Last updated: 2015-09-02
+        <p>
+    AngularJS comes with a built-in dependency injection mechanism. You can divide your application into multiple different
+    types of components which AngularJS can inject into each other. Modularizing your application makes it easier
+    to reuse, configure and test the components in your application.
+</p>
+
+<p>
+    AngularJS contains the following core types of objects and components:
+</p>
+
+
+<ul>
+    <li>Value</li>
+    <li>Factory</li>
+    <li>Service</li>
+    <li>Provider</li>
+    <li>Constant</li>
+</ul>
+
+
+<p>
+    These core types can be injected into each other using AngularJS dependency injection mechanism.
+    Throughout the rest of this text I will explain how to define and inject these components into each other.
+</p>
+
+<a name="value"></a>
+<h2>Value</h2>
+
+<p>
+    A value in AngularJS is a simple object. It can be a number, string or JavaScript object.
+    Values are typically used as configuration which is injected into factories, services or controllers.
+</p>
+
+<p>
+    A value has to belong to an AngularJS module. Here are three examples that add values to
+    an AngularJS module:
+</p>
+
+<pre class="codeBox">
+var myModule = angular.module("myModule", []);
+
+myModule.value("numberValue", 999);
+
+myModule.value("stringValue", "abc");
+
+myModule.value("objectValue", { val1 : 123, val2 : "abc"} );
+</pre>
+
+<p>
+    The values are defined using the <code>value()</code> function on the module. The first
+    parameter is the name of the value, and the second parameter is the value itself. Factories,
+    services and controllers can now reference these values by their name.
+</p>
+
+
+<a name="injecting-a-value"></a>
+<h3>Injecting a Value</h3>
+
+<p>
+    Injecting a value into an AngularJS controller function is done simply by adding a parameter
+    with the same name as the value (the first parameter passed to the <code>value()</code> function
+    when the value is defined). Here is an example:
+</p>
+
+
+<pre class="codeBox">
+var myModule = angular.module("myModule", []);
+
+myModule.value("<b>numberValue</b>", 999);
+
+myModule.controller("MyController", function($scope, <b>numberValue</b>) {
+
+    console.log(numberValue);
+
+});
+</pre>
+
+<p>
+    Notice how the second parameter of the controller function has the same name as the value.
+</p>
+
+
+<a name="factory"></a>
+<h2>Factory</h2>
+
+<p>
+    Factory is a function that creates values. When a service, controller etc. needs a value
+    injected from a factory, the factory creates the value on demand. Once created, the value
+    is reused for all services, controllers etc. which need it injected. Thus, a factory differs
+    from a value in that it can use a factory function to create the object it returns. You can
+    also inject values into a factory for use when creating the object. You cannot do that
+    with a value.
+</p>
+
+<p>
+    Here is an example that defines a factory on a module, and a controller which gets the
+    factory created value injected:
+</p>
+
+
+<pre class="codeBox">
+var myModule = angular.module("myModule", []);
+
+myModule.factory("myFactory", function() {
+    return "a value";
+});
+
+
+myModule.controller("MyController", function($scope, myFactory) {
+
+    console.log(myFactory);
+
+});
+</pre>
+
+<p>
+    As you can see, it is very similar to defining and injecting a value object.
+    Keep in mind that it is not the factory function that is injected, but the value produced
+    by the factory function.
+</p>
+
+
+
+<a name="injecting-values-into-a-factory"></a>
+<h3>Injecting Values Into a Factory</h3>
+
+<p>
+    You can inject a value into a factory. It works just like when a value is injected into a
+    controller. Here is an example:
+</p>
+
+
+<pre class="codeBox">
+var myModule = angular.module("myModule", []);
+
+myModule.value("<b>numberValue</b>", 999);
+
+myModule.factory("myFactory", function(<b>numberValue</b>) {
+    return "a value: " + numberValue;
+});
+</pre>
+
+<p>
+    In this example the injected value is used to create the object created by the factory function.
+</p>
+
+
+
+<a name="service"></a>
+<h2>Service</h2>
+
+<p>
+    A service in AngularJS is a singleton JavaScript object which contains a set of functions. The functions
+    contain whatever logic is necessary for the service to carry out its work.
+</p>
+
+<p>
+    AngularJS services are created using the <code>service()</code> function on a module. Here is an example:
+</p>
+
+
+<pre class="codeBox">
+function MyService() {
+    this.doIt = function() {
+        console.log("done");
+    }
+}
+
+
+var myModule = angular.module("myModule", []);
+
+myModule.service("myService", MyService);
+</pre>
+
+<p>
+    As you can see, services are defined somewhat differently than factories and values. First of all,
+    the service is defined as a separate, named function. That is because services in AngularJS are
+    created using the <code>new</code> keyword. Thus, AngularJS will do this internally:
+</p>
+
+<pre class="codeBox">
+var theService = new MyService();
+</pre>
+
+<p>
+    Apart from defining services as functions with functions inside, you add them to and use them with AngularJS
+    just like you would with a value or function. You inject a service into a controller like this:
+</p>
+
+
+<pre class="codeBox">
+function MyService() {
+    this.doIt = function() {
+        console.log("done");
+    }
+}
+
+
+var myModule = angular.module("myModule", []);
+
+myModule.service("myService", MyService);
+
+
+myModule.controller("MyController", function($scope, <b>myService</b>) {
+
+    myService.doIt();
+
+});
+</pre>
+
+
+
+<a name="injecting-values-into-a-service"></a>
+<h3>Injecting Values Into a Service</h3>
+<p>
+    You can inject values into a service, just like you can inject values into controllers, or services
+    into controllers etc. Here is an example:
+</p>
+
+<pre class="codeBox">
+var myModule = angular.module("myModule", []);
+
+myModule.value  ("myValue"  , "12345");
+
+function MyService(myValue) {
+    this.doIt = function() {
+        console.log("done: " + myValue;
+    }
+}
+
+myModule.service("myService", MyService);
+</pre>
+
+<p>
+    Notice how the parameter to the <code>MyService</code> function is named the same as
+    the value registered on the module. Thus, the value will be injected into the service
+    when it is created.
+</p>
+
+
+
+<a name="providers"></a>
+<h2>Providers</h2>
+
+<p>
+    Providers in AngularJS is the most flexible form of factory you can create. You register a
+    provider with a module just like you do with a service or factory, except you use the
+    <code>provider()</code> function instead. Here is an AngularJS provider example:
+</p>
+
+<pre class="codeBox">
+var myModule = angular.module("myModule", []);
+
+myModule.provider("mySecondService", function() {
+    var provider = {};
+
+    provider.$get = function() {
+        var service = {};
+
+        service.doService = function() {
+            console.log("mySecondService: Service Done!");
+        }
+
+        return service;
+    }
+
+    return provider;
+});
+</pre>
+
+<p>
+    As you can see, the <code>provider()</code> function takes 2 parameters. The first parameter is the
+    name of the service / object which the provider creates. In this case the name is <code>mySecondService</code>.
+    The second parameter is the function which creates the provider. Note: The provider is itself a factory, so
+    at this time no actual service or object is created from the provider. Only the function creating the provider
+    is defined.
+</p>
+
+<p>
+    When you look at the function creating the provider you can see that the provider is a JavaScript object.
+</p>
+
+<p>
+    The JavaScript provider object contains a single <code>$get()</code> function. This is the factory function
+    of the provider. In other words, the <code>$get()</code> function creates whatever the provider creates
+    (service, value etc.). In the example above, the provider creates a service object which contains a single
+    service function (standard JavaScript function) called <code>doService()</code>.
+</p>
+
+<p>
+    In order to get the product of a provider injected into a controller, do specify a dependency on the provider,
+    just like you would with a service. What is injected into the controller is the product created by the provider,
+    not the provider itself. Here is an AngularJS provider injection example:
+</p>
+
+<pre class="codeBox">
+myModule.controller("MyController", function($scope, <b>mySecondService</b>) {
+
+    $scope.whenButtonClicked = function() {
+        mySecondService.doIt();
+    }
+
+});
+</pre>
+
+<p>
+    As you can see, the name of the provider is used as a parameter in the controller function.
+    The object created by the provider's <code>$get()</code> function will be injected into this parameter.
+</p>
+
+
+
+<a name="configuring-a-provider"></a>
+<h3>Configuring a Provider</h3>
+<p>
+    It is possible to configure a provider further via calls to its function during the configuration phase
+    of a module. Here is an example:
+</p>
+
+<pre class="codeBox">
+var myModule = angular.module("myModule", []);
+
+myModule.provider("mySecondService", function() {
+    var provider = {};
+    var config   = { configParam : "default" };
+
+    provider.doConfig = function(configParam) {
+        config.configParam = configParam;
+    }
+
+    provider.$get = function() {
+        var service = {};
+
+        service.doService = function() {
+            console.log("mySecondService: " + config.configParam);
+        }
+
+        return service;
+    }
+
+    return provider;
+});
+
+myModule.config( function( mySecondServiceProvider ) {
+    mySecondServiceProvider.doConfig("new config param");
+});
+
+myModule.controller("MyController", function($scope, mySecondService) {
+
+    $scope.whenButtonClicked = function() {
+        mySecondService.doIt();
+    }
+
+});
+
+</pre>
+
+<p>
+    Notice how the provider object now has an extra function called <code>doConfig()</code>. This function
+    can be used to set a configuration parameter on the provider.
+</p>
+
+<p>
+    Notice also the call to the <code>myModule.config()</code> function. The <code>config</code> function
+    takes a function as parameter. This function can configure the module. The function passed to
+    <code>config()</code> takes a single parameter named <code>mySecondServiceProvider</code>. That
+    is the same name the provider is registered with plus <code>Provider</code> as suffix. The suffix tells
+    AngularJS to inject the provider itself, and not the object created by the provider. Inside the
+    function passed to the <code>config()</code> function the <code>mySecondServiceProvider.doConfig()</code> function
+    is called, which sets the config parameter on the provider.
+</p>
+
+<p>
+    The controller defined later in the example just depends on the object created by the provider
+    (not the provider itself).
+    It does so by taking a parameter named <code>mySecondService</code> which is the name the provider
+    of the service is registered with. As you can see, the service used from inside the 
+    <code>$scope.whenButtonClicked()</code> function.
+</p>
+
+
+
+<a name="constants"></a>
+<h2>Constants</h2>
+
+<p>
+    In the previous section on providers you saw how to configure a provider via the <code>module.config()</code>
+    function. Unfortunately you cannot inject values into the <code>module.config()</code> function. Instead you
+    can inject constants.
+</p>
+
+<p>
+    Constants in AngularJS are defined using the <code>module.constants()</code> function. Here is an
+    AngularJS constant example:
+</p>
+
+<pre class="codeBox">
+myModule.constant("configValue", "constant config value");
+</pre>
+
+<p>
+    This constant can now be injected into the <code>module.config()</code> function like this:
+</p>
+
+<pre class="codeBox">
+myservices.config( function( mySecondServiceProvider, configValue ) {
+    mySecondServiceProvider.doConfig(configValue);
+});
+</pre>
+
+<p>
+    As you can see, the parameter <code>configValue</code> matches the name of the constant which is also
+    <code>configValue</code>. Thus the value of the constant will be injected into this parameter.
+    The constant value is then passed as parameter to the <code>doConfig()</code> function on the
+    <code>mySecondServiceProvider</code> provider.
+</p>
+
+
+
+
+<a name="dependencies-between-modules"></a>
+<h2>Dependencies Between Modules</h2>
+
+<p>
+    As you have seen, values, factories and services are added to an AngularJS module. It is possible for one module
+    to use the values, factories and services of another module. In order to do so, a module needs to declare a
+    dependency on the module which contains the values, factories and services it wants to use. Here is an example:
+</p>
+
+<pre class="codeBox">
+var myUtilModule = angular.module("myUtilModule", []);
+
+myUtilModule.value  ("myValue"  , "12345");
+
+
+var myOtherModule = angular.module("myOtherModule", [<b>'myUtilModule'</b>]);
+
+myOtherModule.controller("MyController", function($scope, <b>myValue</b>) {
+
+});
+</pre>
+
+
+<p>
+    Notice how the second module (<code>myOtherModule</code>) lists the name of the
+    first module (<code>myUtilModule</code>) in the second parameter (inside the array) passed
+    to the <code>angular.module()</code> function. This tells AngularJS that all values, factories
+    and services defined inside the <code>myUtilModule</code> should be available inside
+    the <code>myOtherModule</code> module too. In other words, <code>myOtherModule</code> <i>depends on</i>
+    <code>myUtilModule</code>.
+</p>
+
+<p>
+    Second, notice how the <code>MyController</code> controller function now declares
+    a parameter named <code>myValue</code>. This value will be provided from the value
+    registered on the <code>myUtilModule</code> module.
+</p>
+
+
+
+
+<a name="minification-safe-dependency-injection"></a>
+<h2>Minification Safe Dependency Injection in AngularJS</h2>
+
+<p>
+    When you minify JavaScript the JavaScript minifier replaces the names of local variables
+    and parameters with shorter names. However, AngularJS uses the parameter names of controller
+    functions, factories, services and providers to decide what to inject into their factory functions.
+    If the names are changed, AngularJS cannot inject the correct objects.
+</p>
+
+<p>
+    To make your AngularJS code minification safe, you need to provide the names of the objects to inject as strings.
+    You wrap these strings in an array together with the function that needs the values injected. Here is
+    an AngularJS minification safe dependency injection example:
+</p>
+
+
+<pre class="codeBox">
+var myapp = angular.module("myapp", ['myservices']);
+
+myapp.controller("AController", ['$scope', function(p1) {
+    p1.myvar = "the value";
+}]);
+</pre>
+
+<p>
+    This example injects the <code>$scope</code> object into the <code>p1</code> parameter of
+    the controller function.
+</p>
+
+
+<p>
+    Notice how the controller function is registered. Instead of passing the controller function
+    to the <code>angular.controller</code> function directly, an array is passed instead. This
+    array contains the name of the value to inject into the controller function, as well as the
+    controller function itself. The controller function is always the last value in this array.
+    If you need to inject more than one value, the value names are listed in the beginning
+    of the array and in the sequence they are to be injected into the function. Here is a
+    minification safe multi value example:
+</p>
+
+<pre class="codeBox">
+var myapp = angular.module("myapp", ['myservices']);
+
+myapp.controller("AController", ['$scope', '$http', function(p1, p2) {
+    p1.myvar = "the value";
+    p2.get("/myservice.json");
+}]);
+</pre>
+
+<p>
+    This example injects the <code>$scope</code> object into the <code>p1</code> parameter,
+    and the <code>$http</code> service into the <code>p2</code> parameter of the controller function.
+</p>
+
+<p>
+    Now it no longer matters what the parameter names of the controller function are. AngularJS will
+    use the strings in the beginning of the array to determine what to inject into the controller
+    function.
+</p>
+
+<p>
+    The same mechanism can be used for factories, services and providers to provide minification safe
+    dependency injection. Here is a minification safe factory, service and provider example:
+</p>
+
+
+<pre class="codeBox">
+var myutil = angular.module("myutil", []);
+
+
+myutil.value("safeValue", "a safe value");
+
+
+myutil.factory("safeFactory", ['safeValue', function(p1) {
+    return { value : p1 };
+}]);
+
+
+function MySafeService(p1){
+    this.doIt = function() {
+        return "MySafeService.doIt() called: " + p1.value;
+    }
+}
+myutil.service("safeService", ['safeFactory', MySafeService]);
+
+
+myutil.provider("safeService2", function() {
+    var provider = {};
+
+    provider.$get = ['safeService', function(p1) {
+        var service = {};
+
+        service.doService = function() {
+            console.log("safeService from provider: " + p1.doIt());
+        }
+
+        return service;
+    }];
+
+    return provider;
+});
+
+myapp.controller("AController", ['$scope', 'safeService2', function(p1, p2) {
+    p1.myvar = "the value";
+    p2.doService();
+}]);
+</pre>
+
+<p>
+    Notice especially the declaration of the provider. Notice how the dependencies are not
+    specified on the provider factory function, but on the <code>$get()</code> function
+    of the provider returned from inside the provider factory function. Actually, an array
+    with names of dependencies and the function implementation is used instead of just a <code>$get()</code>
+    function. Other than that, specifying dependencies works the same for providers as for factories,
+    services and controller functions.
+</p>
+        </div>
+
+        
+        <br/><br/>
+        
+            </tr>
+            <tr><td></td></tr>
+        </table>
+        </div>
+
+</div>
+
+    
+
+
+</body>
+
+
+
+</html>
