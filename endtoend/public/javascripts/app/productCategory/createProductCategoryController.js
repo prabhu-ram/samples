@@ -40,7 +40,7 @@ function createProductCategoryController($scope, $timeout, productCategoryServic
 		$scope.validationResult.validationSummary = "";
 	}
 
-	$scope.createProductCategory = function(productCategory) {
+	$scope.createProductCategoryFunc = function(productCategory) {
 
 		var validationMessages = requiredFieldValidationService.getRequiredFieldValidationErrorMessage(
 			[

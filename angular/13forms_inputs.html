@@ -27,12 +27,21 @@ If you bind a checkbox (<code><input type="checkbox">)</code> to a model propert
 If you need other values instead of true and false inserted into your model, you can use the ng-true-value and ng-false-value directives, like this:
 <p></p>
  <input type="checkbox" ng-model="myForm.wantNewsletter"
-                        ng-true-value="yes" ng-false-value="no" >
+                        ng-true-value="checked" ng-false-value="not checked" >
 <p></p>
+<div>
+{{myForm.wantNewsletter}}
+</div>
 Radio buttons are also easy to bind to model properties. If you have a group of radio buttons, just bind them all to the same model property. The radio button that is chosen will have its value copied into the model property. Here is an example:
 <p></p>
 <input type="radio" ng-model="myForm.whichNewsletter" value="weeklyNews">    
 <input type="radio" ng-model="myForm.whichNewsletter" value="monthlyNews"> 
+<div>
+{{myForm.whichNewsletter}}
+</div>
+
+
+
 </div>
 
 

@@ -29,9 +29,9 @@ app.use('/bower_components', express.static(path.join(__dirname, '/bower_compone
 
 var pool      =    mysql.createPool({
         connectionLimit : 5,
-        host     : 'localhost',
-        user     : 'root',
-        password : 'Abc123!@#',
+        host     : '192.168.1.5',
+        user     : 'prabhu',
+        password : 'prabhu',
         database : 'productmanagement',
         debug    :  false
 });

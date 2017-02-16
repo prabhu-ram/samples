@@ -46,7 +46,7 @@ productCategoryRouteConfig.prototype.addRoutes = function() {
 			    self.dbConnectionPool,
 			    request.body, 
 			    function(status) {
-				response.json(status);
+					response.json(status);
 			});
 		}
 	});
